@@ -117,6 +117,36 @@ Run the tests:
 npm test
 ```
 
+## Docker Deployment
+
+This project includes a Dockerfile for containerizing the application. Environment variables are managed using Doppler.
+
+### Building the Docker Image
+
+```bash
+docker build -t tennis-players-api .
+```
+
+### Running with Doppler
+
+[Doppler](https://www.doppler.com/) is used for managing environment variables. Make sure you have Doppler CLI installed and configured with your project.
+
+```bash
+# Run the container with environment variables injected by Doppler
+doppler run -- docker run -p 3000:3000 tennis-players-api
+```
+
+### Required Environment Variables
+
+The following environment variables should be configured in your Doppler project:
+
+- `DB_HOST` - PostgreSQL host
+- `DB_PORT` - PostgreSQL port (default: 5432)
+- `DB_USER` - PostgreSQL username
+- `DB_PASSWORD` - PostgreSQL password
+- `DB_NAME` - PostgreSQL database name
+- `PORT` - Port for the API server (default: 3000)
+
 ## API Endpoints
 
 ### GET /players
