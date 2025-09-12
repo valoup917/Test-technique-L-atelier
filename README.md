@@ -1,155 +1,151 @@
-<h1 align="center"> 🐺 Project Name 💻 </h1> <br>
-<p align="center">
-    <img alt="mockup" title="mockup" src="./images/screenshot.png" width="1000">
-</p>
+# Tennis Players API
 
-<p align="center">
-  Une simple phrase de description du projet, des utilisateurs ciblés et de l'utilitée de l'app.
-</p>
+A minimal Node.js Express API with TypeScript for retrieving tennis players data from a PostgreSQL database.
 
----
+## Project Structure
 
+```
+/
+├── src/
+│   ├── config/
+│   │   └── db.ts           # Database configuration
+│   ├── routes/
+│   │   └── players.ts      # Player routes
+│   ├── services/
+│   │   └── playerService.ts # Player service
+│   ├── types/
+│   │   └── player.ts       # Type definitions
+│   ├── app.ts              # Express application setup
+│   └── server.ts           # Server entry point
+├── tests/
+│   └── players.test.ts     # Tests for players endpoint
+├── package.json
+├── tsconfig.json
+├── jest.config.js
+└── README.md
+```
 
-## 👨🏻‍🏫 Le sujet / Introduction à / Le sujet Epitech
+## Features
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed. 🌍
+- RESTful API endpoint for retrieving players data
+- Players sorted by rank (ASC) and points (DESC)
+- Error handling
+- Jest tests
+- TypeScript for type safety
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam nihil, eveniet aliquid culpa officia. 💻
+## Prerequisites
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollit tenetur iure eius earum ut molestias architecto voluptate aliquam nihil, eveniet aliquid culpa officia. ♻️
+- Node.js (v14 or higher)
+- PostgreSQL database
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollit tenetur iure eius earum ut molestias architecto voluptate aliquam niaccusa accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestntium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molesthil, eveniet aliquid culpa officia. 🌱
+## Database Setup
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollit tenetur iure eius earum ut molestias architecto voluptate aliquam niaccusa accusantium nemo autem. Veritatis obcaecati tenet. 🌐
+The application expects a PostgreSQL database with a `players` table containing the following columns:
 
-#### 📋 Prérequis
+- id
+- firstname
+- lastname
+- shortname
+- sex
+- rank
+- points
+- weight
+- height
+- age
+- last (JSONB)
+- countrycode
+- countrypicture
+- picture
 
-- **Lorem ipsum**: Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-- **Lorem ipsum**: Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-- **Lorem ipsum**: Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-- **Lorem ipsum**: Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-- **Lorem ipsum**: Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
+You can create the table with the following SQL:
 
+```sql
+CREATE TABLE players (
+  id SERIAL PRIMARY KEY,
+  firstname VARCHAR(255) NOT NULL,
+  lastname VARCHAR(255) NOT NULL,
+  shortname VARCHAR(10),
+  sex CHAR(1),
+  rank INTEGER,
+  points INTEGER,
+  weight INTEGER,
+  height INTEGER,
+  age INTEGER,
+  last JSONB,
+  countrycode VARCHAR(3),
+  countrypicture VARCHAR(255),
+  picture VARCHAR(255)
+);
+```
 
-#### 🎁 Bonus
+## Installation
 
-- **Lorem ipsum**: Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-- **Lorem ipsum**: Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-- **Lorem ipsum**: Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
+1. Clone the repository
+2. Install dependencies:
 
-
----
-
-
-## 👨🏽‍💻 Mon projet / Notre projet
-
-
-#### 🎶 Présentation
-
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollit tenetur iure eius earum ut molestias architecto voluptate aliquam niaccusa accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestntium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molesthil, eveniet aliquid culpa officia eius earum ut molesthil, eveniet aliquid culpa officia 
-
-#### 🔗 Fonctionnalités
-
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollit tenetur iure eius earum ut molestias architecto voluptate aliquam niaccusa accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestntium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molesthil, eveniet aliquid culpa officia eius earum ut molesthil, eveniet aliquid culpa officia Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollit tenetur iure eius earum ut molestias architecto voluptate aliquam niaccusa accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestntium nemo autem.
-
-
----
-
-## 🖥️ Ma solution / Notre solution
-
-<div align="center">
-<img alt="mockup 1" title="mockup" src="./images/screenshot.png" width="1050">
-
----
-
-<img alt="mockup 2" title="mockup" src="./images/screenshot.png" width="1050">
-
----
-
-<img alt="mockup 3" title="mockup" src="./images/screenshot.png" width="1050">
-</div>
-
----
-
-
-## 🏗️ Architecture et technos
-
-</br>
-<div align="center">
-  <img alt="GitHub" src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" />
-  <img alt="Javascript" src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" />
-  <img alt="Nodejs" src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" />
-</div>
-</br>
-
-<div align="center">
-    <img alt="architecture" title="mockup" src="./images/screenshot.png" width="800">
-</div>
-</br>
-
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollit tenetur iure eius earum ut molestias architecto voluptate aliquam niaccusa accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestntium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molesthil, eveniet aliquid culpa officia eius earum ut molesthil, eveniet aliquid culpa officia Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollit tenetur iure eius earum ut molestias architecto voluptate aliquam niaccusa accusantium nemo autem. Veritatis obcaecati tenetur iure eius earum ut molestntium nemo autem.
-
----
-
-
-## 📉📈 Déployer localement / Installer
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Cloner le projet depuis GitHub :
 ```bash
-git clone https://github.com/valoup917/Project-Name.git
+npm install
 ```
-3. Accéder au répertoire du projet :
+
+3. Update the database configuration in `src/config/db.ts` with your PostgreSQL credentials.
+
+## Running the Application
+
+Development mode:
+
 ```bash
-cd Project-Name.git
+npm run dev
 ```
-4. Installer les dépendances du projet :
+
+Build the application:
+
 ```bash
-npm install || flutter pub get
+npm run build
 ```
-5. Enter your API in `config.js`
-```js
-const API_KEY = 'ENTER YOUR API';
-```
-6. Lancer le projet sur le device de votre choix:
+
+Production mode:
+
 ```bash
-npm start || flutter run
+npm start
 ```
 
----
+## Testing
 
-## 📩 Contactez moi / nous
-👨🏻 Valentin Fouillet - Developpeur fullstack
-<div align="center">
-    <a href="https://github.com/valoup917">
-        <img alt="GitHub" src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" />
-    </a>
-    <a href="https://www.linkedin.com/in/valentin-fouillet/">
-        <img alt="Linkedin" src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" />
-    </a>
-</div>
+Run the tests:
 
---- 
+```bash
+npm test
+```
 
-🧔🏽 Illyas chihi - Devops engineer / Developpeur backend
-<div align="center">
-    <a href="https://github.com/">
-        <img alt="GitHub" src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" />
-    </a>
-    <a href="https://www.linkedin.com/">
-        <img alt="Linkedin" src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" />
-    </a>
-</div>
+## API Endpoints
 
----
+### GET /players
 
-👩🏽 Silya Nait-Zerad - Developpeur Front End
-<div align="center">
-    <a href="https://github.com/">
-        <img alt="GitHub" src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" />
-    </a>
-    <a href="https://www.linkedin.com/">
-        <img alt="Linkedin" src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" />
-    </a>
-</div>
+Returns a list of all players sorted by rank (ASC) and points (DESC).
+
+**Response:**
+
+```json
+{
+  "players": [
+    {
+      "id": 17,
+      "firstname": "Rafael",
+      "lastname": "Nadal",
+      "shortname": "R.NAD",
+      "sex": "M",
+      "rank": 1,
+      "points": 1982,
+      "weight": 85000,
+      "height": 185,
+      "age": 33,
+      "last": [1, 0, 0, 0, 1],
+      "countrycode": "ESP",
+      "countrypicture": "https://tenisu.latelier.co/resources/Espagne.png",
+      "picture": "https://tenisu.latelier.co/resources/Nadal.png"
+    },
+    // More players...
+  ]
+}
+```
 
