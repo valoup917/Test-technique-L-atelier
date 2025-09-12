@@ -9,16 +9,46 @@ const router = express.Router();
 /**
  * GET /players
  * Returns all players sorted by rank (ASC) and points (DESC) if same rank
+ * Or returns a specific player if id query parameter is provided
+ * 
+ * Query Parameters:
+ * - id: Optional player ID to retrieve a specific player
  */
 router.get('/', async (req: Request, res: Response) => {
   try {
+    const idParam = req.query.id as string | undefined;
+    
+    if (idParam !== undefined) {
+      const id = parseInt(idParam as string, 10);
+      
+      if (isNaN(id)) {
+        return res.status(400).json({
+          error: 'Bad Request',
+          message: 'Player ID must be a number'
+        });
+      }
+      
+      const player = await playerService.getPlayerById(id);
+      
+      // If player not found, return 404
+      if (!player) {
+        return res.status(404).json({
+          error: 'Not Found',
+          message: `Player with ID ${id} not found`
+        });
+      }
+      
+      return res.status(200).json({ player });
+    }
+    
+    // If no id parameter, return all players
     const players = await playerService.getAllPlayers();
-    res.status(200).json({ players });
+    return res.status(200).json({ players });
   } catch (error) {
     console.error('Error in GET /players route:', error);
     res.status(500).json({
       error: 'Internal server error',
-      message: 'Failed to retrieve players data'
+      message: 'Failed to retrieve player data'
     });
   }
 });

@@ -121,9 +121,13 @@ npm test
 
 ### GET /players
 
-Returns a list of all players sorted by rank (ASC) and points (DESC).
+Returns a list of all players sorted by rank (ASC) and points (DESC) when no query parameters are provided, or returns a specific player when the `id` query parameter is specified.
 
-**Response:**
+**Query Parameters:**
+
+- `id` (optional) - Player ID to retrieve a specific player
+
+**Response (without id parameter):**
 
 ```json
 {
@@ -149,3 +153,35 @@ Returns a list of all players sorted by rank (ASC) and points (DESC).
 }
 ```
 
+**Response (with id parameter):**
+
+```json
+{
+  "player": {
+    "id": 17,
+    "firstname": "Rafael",
+    "lastname": "Nadal",
+    "shortname": "R.NAD",
+    "sex": "M",
+    "rank": 1,
+    "points": 1982,
+    "weight": 85000,
+    "height": 185,
+    "age": 33,
+    "last": [1, 0, 0, 0, 1],
+    "countrycode": "ESP",
+    "countrypicture": "https://tenisu.latelier.co/resources/Espagne.png",
+    "picture": "https://tenisu.latelier.co/resources/Nadal.png"
+  }
+}
+```
+
+**Examples:**
+- `GET /players` - Returns all players
+- `GET /players?id=17` - Returns the player with ID 17
+
+**Error Responses:**
+
+- `400 Bad Request` - If the ID is not a valid number
+- `404 Not Found` - If no player with the specified ID exists
+- `500 Internal Server Error` - If a server error occurs
