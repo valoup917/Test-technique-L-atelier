@@ -18,3 +18,11 @@ export interface Player {
   countrypicture: string;
   picture: string;
 }
+
+export interface PlayerStatisticsData {
+  weight: number;
+  height: number;
+  last: number[];
+  countrycode: string;
+  points: number;
+}

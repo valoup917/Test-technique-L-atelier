@@ -3,6 +3,8 @@
  */
 import express, { Request, Response } from 'express';
 import * as playerService from '../services/playerService';
+import * as statisticsService from '../services/statisticsService';
+import { Statistics } from '../types/statistics';
 
 const router = express.Router();
 
@@ -49,6 +51,26 @@ router.get('/', async (req: Request, res: Response) => {
     res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to retrieve player data'
+    });
+  }
+});
+
+/**
+ * GET /players/statistics
+ * Returns statistics about players:
+ * - Country with the highest win ratio
+ * - Average IMC of all players
+ * - Median height of all players
+ */
+router.get('/statistics', async (_req: Request, res: Response) => {
+  try {
+    const statistics: Statistics = await statisticsService.getStatistics();
+    return res.status(200).json({ statistics });
+  } catch (error) {
+    console.error('Error in GET /players/statistics route:', error);
+    res.status(500).json({
+      error: 'Internal server error',
+      message: 'Failed to retrieve player statistics'
     });
   }
 });

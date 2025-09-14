@@ -215,3 +215,30 @@ Returns a list of all players sorted by rank (ASC) and points (DESC) when no que
 - `400 Bad Request` - If the ID is not a valid number
 - `404 Not Found` - If no player with the specified ID exists
 - `500 Internal Server Error` - If a server error occurs
+
+### GET /players/statistics
+
+Returns statistics about the players:
+
+- Country with the highest win ratio
+- Average IMC (Body Mass Index) of all players
+- Median height of all players
+
+**Response:**
+
+```json
+{
+  "statistics": {
+    "countryWithHighestWinRatio": {
+      "countryCode": "SRB",
+      "winRatio": 1.0
+    },
+    "averageIMC": 23.45,
+    "medianHeight": 186.5
+  }
+}
+```
+
+**Error Responses:**
+
+- `500 Internal Server Error` - If a server error occurs
