@@ -102,7 +102,7 @@ const swaggerOptions = {
     servers: [
       {
         url: '/',
-        description: 'Local server',
+        description: 'Current environment',
       },
     ],
     components: {
@@ -112,6 +112,11 @@ const swaggerOptions = {
     paths: loadPaths(),
   },
   apis: [], // We're using our yaml files instead
+  
+  // Ensure Swagger UI finds the spec when accessed from any domain or path
+  swaggerOptions: {
+    url: '/swagger.json',
+  },
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);

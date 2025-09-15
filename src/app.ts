@@ -20,10 +20,20 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use('/players', playersRoutes);
 
 // Swagger documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  explorer: true,
+  swaggerOptions: {
+    url: '/swagger.json',
+    docExpansion: 'list',
+    persistAuthorization: true
+  }
+}));
 
 // Expose the swagger spec as JSON
 app.get('/swagger.json', (req: Request, res: Response) => {
+  // Set CORS headers to ensure the spec can be loaded from any domain
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET');
   res.setHeader('Content-Type', 'application/json');
   res.send(swaggerSpec);
 });

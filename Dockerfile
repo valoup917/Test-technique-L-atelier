@@ -20,6 +20,8 @@ RUN wget -q -t3 'https://packages.doppler.com/public/cli/rsa.8004D9FF50437357.ke
 
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
+
+COPY --from=build /app/src/swagger /app/dist/swagger
 COPY package*.json ./
 
 ENV PORT=3000
