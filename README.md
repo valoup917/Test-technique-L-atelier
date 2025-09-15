@@ -309,6 +309,7 @@ Creates a new player in the database.
 
 ```json
 {
+  "id": 1,   // Must be unique
   "firstname": "Roger",
   "lastname": "Federer",
   "shortname": "R.FED",  // Must be unique
@@ -330,7 +331,7 @@ Creates a new player in the database.
 ```json
 {
   "player": {
-    "id": 99,
+    "id": 1,
     "firstname": "Roger",
     "lastname": "Federer",
     "shortname": "R.FED",
