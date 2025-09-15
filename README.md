@@ -30,7 +30,9 @@ A minimal Node.js Express API with TypeScript for retrieving and managing tennis
 │   ├── playerService.transaction.test.ts # Tests for transaction handling
 │   ├── playerService.security.test.ts    # Security-focused tests
 │   └── statisticsService.test.ts    # Tests for statistics service
-├── db_inserter.py              # Database setup script
+├── script/
+│   ├── db_inserter.py          # Database setup script
+│   └── requirements.txt        # Python dependencies for db_inserter
 ├── package.json
 ├── tsconfig.json
 ├── jest.config.js
@@ -51,46 +53,9 @@ A minimal Node.js Express API with TypeScript for retrieving and managing tennis
 - Node.js (v14 or higher)
 - PostgreSQL database
 
-## Database Setup
+## Database
 
-The application expects a PostgreSQL database with a `players` table containing the following columns:
-
-- id
-- firstname
-- lastname
-- shortname
-- sex
-- rank
-- points
-- weight
-- height
-- age
-- last (JSONB)
-- countrycode
-- countrypicture
-- picture
-
-You can create the table with the following SQL:
-
-```sql
-CREATE TABLE players (
-  id SERIAL PRIMARY KEY,
-  firstname VARCHAR(255) NOT NULL,
-  lastname VARCHAR(255) NOT NULL,
-  shortname VARCHAR(10) NOT NULL,
-  sex CHAR(1) NOT NULL,
-  rank INTEGER NOT NULL,
-  points INTEGER NOT NULL,
-  weight INTEGER NOT NULL,
-  height INTEGER NOT NULL,
-  age INTEGER NOT NULL,
-  last JSONB NOT NULL,
-  countrycode VARCHAR(3) NOT NULL,
-  countrypicture VARCHAR(255) NOT NULL,
-  picture VARCHAR(255) NOT NULL,
-  CONSTRAINT players_shortname_uk UNIQUE (shortname)
-);
-```
+The database is already set up and ready to use with the application.
 
 ## Installation
 
@@ -196,6 +161,82 @@ The following environment variables should be configured in your Doppler project
 - `DB_PASSWORD` - PostgreSQL password
 - `DB_NAME` - PostgreSQL database name
 - `PORT` - Port for the API server (default: 3000)
+
+## AWS Cloud Deployment
+
+For the technical test, the application has been deployed on AWS using a containerized approach with high availability.
+
+### Deployment Architecture
+
+1. **Docker Image**: The application Docker image is pushed to Amazon ECR (Elastic Container Registry)
+
+2. **Containerized Deployment**: 
+   - Two ECS (Elastic Container Service) containers are deployed from the ECR image
+   - This provides redundancy and high availability for the application
+
+3. **Load Balancing**:
+   - An AWS Application Load Balancer is placed in front of the containers
+   - Containers are linked to the load balancer via a target group
+   - This ensures even distribution of incoming traffic and failover capability
+
+### Accessing the Cloud Deployment
+
+The application is accessible via the load balancer URL:
+```
+http://test-latelier-lb-615418084.eu-west-3.elb.amazonaws.com
+```
+
+**Note**: Due to the AWS account being used for testing purposes, the Swagger UI documentation might take a bit longer to load on the first access. This is because the containers might be in a cold start state or the AWS resources might be operating at a lower performance tier for cost efficiency during testing. Subsequent requests should perform better.
+
+## API Testing Tools
+
+### Postman Collection
+
+A Postman collection has been created for easy testing of the API endpoints. The collection includes pre-configured requests for all available endpoints.
+
+**Access the Postman Collection:**
+[Tennis Players API Postman Collection](https://galactic-crescent-687578.postman.co/workspace/My-Workspace~c7ce1027-dfb3-4a11-8d57-23502ac9946a/collection/19529255-beb9f848-c6ea-462b-bf19-b78a52b9850a?action=share&creator=19529255)
+
+With this collection, you can:
+- Test all API endpoints with pre-configured requests
+- View example responses
+- Modify request parameters easily
+- Run the entire collection as a test suite
+
+### Swagger Documentation
+
+This project includes an interactive API documentation using Swagger UI that allows you to explore and test the API endpoints.
+
+#### Accessing Swagger Documentation
+
+When the application is running, you can access the Swagger documentation at:
+
+```
+http://localhost:3000/api-docs
+```
+
+Or for the cloud deployment:
+
+```
+http://test-latelier-lb-615418084.eu-west-3.elb.amazonaws.com/api-docs
+```
+
+#### Features of the Swagger Documentation
+
+- Interactive exploration of API endpoints
+- Detailed schema information for request and response models
+- Try out functionality to test API calls directly from the browser
+- Downloadable OpenAPI specification in JSON format at `/swagger.json`
+
+#### Swagger Structure
+
+The Swagger documentation is organized in a modular way using YAML files:
+
+- **Definitions**: Located in `src/swagger/definitions/` - These define the data models (Player, Statistics)
+- **Paths**: Located in `src/swagger/paths/` - These define the API endpoints and operations
+- **Responses**: Located in `src/swagger/responses/` - These define common API responses
+
+This modular approach makes it easy to maintain and extend the API documentation as the project grows.
 
 ## API Endpoints
 
@@ -313,35 +354,6 @@ Creates a new player in the database.
 - `409 Conflict` - If a player with the same shortname already exists
 - `500 Internal Server Error` - If a server error occurs
 
-## API Documentation
-
-This project includes an interactive API documentation using Swagger UI that allows you to explore and test the API endpoints.
-
-### Accessing Swagger Documentation
-
-When the application is running, you can access the Swagger documentation at:
-
-```
-http://localhost:3000/api-docs
-```
-
-### Features of the Swagger Documentation
-
-- Interactive exploration of API endpoints
-- Detailed schema information for request and response models
-- Try out functionality to test API calls directly from the browser
-- Downloadable OpenAPI specification in JSON format at `/swagger.json`
-
-### Swagger Structure
-
-The Swagger documentation is organized in a modular way using YAML files:
-
-- **Definitions**: Located in `src/swagger/definitions/` - These define the data models (Player, Statistics)
-- **Paths**: Located in `src/swagger/paths/` - These define the API endpoints and operations
-- **Responses**: Located in `src/swagger/responses/` - These define common API responses
-
-This modular approach makes it easy to maintain and extend the API documentation as the project grows.
-
 ### GET /players with ID Parameter
 
 **Error Responses:**
@@ -376,3 +388,34 @@ Returns statistics about the players:
 **Error Responses:**
 
 - `500 Internal Server Error` - If a server error occurs
+
+## Database Setup (Optional)
+
+The database is already set up and ready to use with the application. However, if you need to reset or recreate the database, you can use the provided Python script.
+
+### Recreating the Database
+
+The script `script/db_inserter.py` can be used to initialize the database with sample data:
+
+1. Set up a Python virtual environment:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+2. Install required Python dependencies:
+```bash
+pip install -r script/requirements.txt
+```
+
+3. Run the database setup script:
+```bash
+python3 script/db_inserter.py
+```
+
+Make sure the appropriate environment variables are set before running the script:
+- `DB_HOST` - PostgreSQL host
+- `DB_PORT` - PostgreSQL port
+- `DB_USER` - PostgreSQL username
+- `DB_PASSWORD` - PostgreSQL password
+- `DB_NAME` - PostgreSQL database name
