@@ -7,7 +7,7 @@ export interface Player {
   firstname: string;
   lastname: string;
   shortname: string;
-  sex: string;
+  sex: 'M' | 'F';
   rank: number;
   points: number;
   weight: number;
