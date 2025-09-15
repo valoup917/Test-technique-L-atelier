@@ -4,10 +4,13 @@
 import request from 'supertest';
 import app from '../src/app';
 import * as playerService from '../src/services/playerService';
+import * as statisticsService from '../src/services/statisticsService';
 import { Player } from '../src/types/player';
+import { Statistics } from '../src/types/statistics';
 
-// Mock the playerService module
+// Mock the services
 jest.mock('../src/services/playerService');
+jest.mock('../src/services/statisticsService');
 
 // Sample mock data based on the provided JSON
 const mockPlayers: Player[] = [
@@ -42,6 +45,32 @@ const mockPlayers: Player[] = [
     height: 188,
     age: 31,
     last: [1, 1, 1, 1, 1]
+  }
+];
+
+// Sample mock statistics
+const mockStatistics: Statistics = {
+  countryWithHighestWinRatio: {
+    countryCode: "SRB",
+    winRatio: 1.0
+  },
+  averageIMC: 23.45,
+  medianHeight: 186.5
+};
+
+// Sample mock player statistics data
+const mockPlayerStatisticsData = [
+  {
+    weight: 85000,
+    height: 185,
+    last: [1, 0, 0, 0, 1],
+    countrycode: "ESP"
+  },
+  {
+    weight: 80000,
+    height: 188,
+    last: [1, 1, 1, 1, 1],
+    countrycode: "SRB"
   }
 ];
 
@@ -144,5 +173,199 @@ describe('GET /players?id=', () => {
     expect(response.body).toHaveProperty('message');
     expect(playerService.getPlayerById).toHaveBeenCalledTimes(1);
     expect(playerService.getPlayerById).toHaveBeenCalledWith(17);
+  });
+});
+
+describe('POST /players', () => {
+  beforeEach(() => {
+    // Clear all mocks before each test
+    jest.clearAllMocks();
+  });
+
+  test('should create a new player when valid data is provided', async () => {
+    const newPlayerData = {
+      id: 99,
+      firstname: "Roger",
+      lastname: "Federer",
+      shortname: "R.FEDer",
+      sex: "M",
+      countrycode: "CHE",
+      countrypicture: "https://tenisu.latelier.co/resources/Suisse.png",
+      picture: "https://tenisu.latelier.co/resources/Federer.png",
+      rank: 3,
+      points: 1920,
+      weight: 83000,
+      height: 185,
+      age: 38,
+      last: [1, 1, 0, 1, 0]
+    };
+
+    // Mock the createPlayer method to return the created player
+    (playerService.createPlayer as jest.Mock).mockResolvedValue(newPlayerData);
+
+    // Make request to the endpoint
+    const response = await request(app)
+      .post('/players')
+      .send(newPlayerData)
+      .set('Accept', 'application/json');
+
+    // Assertions
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('player');
+    expect(response.body.player).toEqual(newPlayerData);
+    expect(playerService.createPlayer).toHaveBeenCalledTimes(1);
+    expect(playerService.createPlayer).toHaveBeenCalledWith(newPlayerData);
+  });
+
+  test('should return 400 when required fields are missing', async () => {
+    const incompletePlayerData = {
+      firstname: "Roger",
+      lastname: "Federer",
+      // Missing other required fields
+    };
+
+    // Make request to the endpoint
+    const response = await request(app)
+      .post('/players')
+      .send(incompletePlayerData)
+      .set('Accept', 'application/json');
+
+    // Assertions
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error');
+    expect(playerService.createPlayer).not.toHaveBeenCalled();
+  });
+
+  test('should return 400 when numeric fields are not numbers', async () => {
+    const invalidPlayerData = {
+      firstname: "Roger",
+      lastname: "Federer",
+      shortname: "R.FED",
+      sex: "M",
+      countrycode: "CHE",
+      countrypicture: "https://tenisu.latelier.co/resources/Suisse.png",
+      picture: "https://tenisu.latelier.co/resources/Federer.png",
+      rank: "not-a-number", // Invalid: should be a number
+      points: 1920,
+      weight: 83000,
+      height: 185,
+      age: 38,
+      last: [1, 1, 0, 1, 0]
+    };
+
+    // Make request to the endpoint
+    const response = await request(app)
+      .post('/players')
+      .send(invalidPlayerData)
+      .set('Accept', 'application/json');
+
+    // Assertions
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error');
+    expect(playerService.createPlayer).not.toHaveBeenCalled();
+  });
+
+  test('should return 400 when last is not an array', async () => {
+    const invalidPlayerData = {
+      firstname: "Roger",
+      lastname: "Federer",
+      shortname: "R.FED",
+      sex: "M",
+      countrycode: "CHE",
+      countrypicture: "https://tenisu.latelier.co/resources/Suisse.png",
+      picture: "https://tenisu.latelier.co/resources/Federer.png",
+      rank: 3,
+      points: 1920,
+      weight: 83000,
+      height: 185,
+      age: 38,
+      last: "not-an-array" // Invalid: should be an array
+    };
+
+    // Make request to the endpoint
+    const response = await request(app)
+      .post('/players')
+      .send(invalidPlayerData)
+      .set('Accept', 'application/json');
+
+    // Assertions
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error');
+    expect(playerService.createPlayer).not.toHaveBeenCalled();
+  });
+});
+
+describe('GET /players/statistics', () => {
+  beforeEach(() => {
+    // Clear all mocks before each test
+    jest.clearAllMocks();
+  });
+
+  test('should return player statistics', async () => {
+    // Mock the fetchPlayerStatisticsData method to return our mock data
+    (statisticsService.fetchPlayerStatisticsData as jest.Mock).mockResolvedValue(mockPlayerStatisticsData);
+    
+    // Mock the calculation methods to return expected values
+    (statisticsService.calculateCountryWithHighestWinRatio as jest.Mock).mockReturnValue({
+      countryCode: "SRB",
+      winRatio: 1.0
+    });
+    (statisticsService.calculateAverageIMC as jest.Mock).mockReturnValue(23.45);
+    (statisticsService.calculateMedianHeight as jest.Mock).mockReturnValue(186.5);
+    
+    // The getStatistics method should use the real implementation
+    jest.spyOn(statisticsService, 'getStatistics').mockImplementation(async () => {
+      const players = await statisticsService.fetchPlayerStatisticsData();
+      return {
+        countryWithHighestWinRatio: statisticsService.calculateCountryWithHighestWinRatio(players),
+        averageIMC: statisticsService.calculateAverageIMC(players),
+        medianHeight: statisticsService.calculateMedianHeight(players)
+      };
+    });
+
+    // Make request to the endpoint
+    const response = await request(app).get('/players/statistics');
+
+    // Assertions
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('statistics');
+    expect(response.body.statistics).toEqual(mockStatistics);
+    expect(statisticsService.getStatistics).toHaveBeenCalledTimes(1);
+    
+    // Verify specific statistics properties
+    const stats = response.body.statistics;
+    expect(stats).toHaveProperty('countryWithHighestWinRatio');
+    expect(stats).toHaveProperty('averageIMC');
+    expect(stats).toHaveProperty('medianHeight');
+    expect(stats.countryWithHighestWinRatio).toHaveProperty('countryCode');
+    expect(stats.countryWithHighestWinRatio).toHaveProperty('winRatio');
+  });
+
+  test('should return 500 when database error occurs', async () => {
+    // Mock the fetchPlayerStatisticsData method to throw an error
+    (statisticsService.fetchPlayerStatisticsData as jest.Mock).mockRejectedValue(new Error('Database error'));
+    
+    // The getStatistics method should use the real implementation
+    jest.spyOn(statisticsService, 'getStatistics').mockImplementation(async () => {
+      try {
+        const players = await statisticsService.fetchPlayerStatisticsData();
+        return {
+          countryWithHighestWinRatio: statisticsService.calculateCountryWithHighestWinRatio(players),
+          averageIMC: statisticsService.calculateAverageIMC(players),
+          medianHeight: statisticsService.calculateMedianHeight(players)
+        };
+      } catch (error) {
+        throw error;
+      }
+    });
+
+    // Make request to the endpoint
+    const response = await request(app).get('/players/statistics');
+
+    // Assertions
+    expect(response.status).toBe(500);
+    expect(response.body).toHaveProperty('error');
+    expect(response.body).toHaveProperty('message');
+    expect(statisticsService.getStatistics).toHaveBeenCalledTimes(1);
   });
 });
