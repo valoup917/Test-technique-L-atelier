@@ -1,0 +1,22 @@
+Statistics:
+  type: object
+  properties:
+    countryWithHighestWinRatio:
+      type: object
+      properties:
+        countryCode:
+          type: string
+          description: Country code with highest win ratio
+          example: SRB
+        winRatio:
+          type: number
+          description: Win ratio (0-1)
+          example: 1.0
+    averageIMC:
+      type: number
+      description: Average Body Mass Index of all players
+      example: 23.45
+    medianHeight:
+      type: number
+      description: Median height of all players in cm
+      example: 186.5

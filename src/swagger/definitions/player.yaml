@@ -1,0 +1,90 @@
+Player:
+  type: object
+  required:
+    - id
+    - firstname
+    - lastname
+    - shortname
+    - sex
+    - rank
+    - points
+    - weight
+    - height
+    - age
+    - last
+    - countrycode
+    - countrypicture
+    - picture
+  properties:
+    id:
+      type: integer
+      description: The player ID
+      example: 17
+    firstname:
+      type: string
+      description: The player's first name
+      example: Rafael
+    lastname:
+      type: string
+      description: The player's last name
+      example: Nadal
+    shortname:
+      type: string
+      description: The player's short name (must be unique)
+      example: R.NAD
+    sex:
+      type: string
+      enum: [M, F]
+      description: The player's gender
+      example: M
+    rank:
+      type: integer
+      minimum: 1
+      maximum: 2147483647
+      description: The player's rank
+      example: 1
+    points:
+      type: integer
+      minimum: 0
+      maximum: 2147483647
+      description: The player's points
+      example: 1982
+    weight:
+      type: integer
+      minimum: 1
+      maximum: 2147483647
+      description: The player's weight in grams
+      example: 85000
+    height:
+      type: integer
+      minimum: 1
+      maximum: 2147483647
+      description: The player's height in cm
+      example: 185
+    age:
+      type: integer
+      minimum: 1
+      maximum: 2147483647
+      description: The player's age
+      example: 33
+    last:
+      type: array
+      items:
+        type: integer
+        enum: [0, 1]
+      description: The player's last 5 match results (1=win, 0=loss)
+      example: [1, 0, 0, 0, 1]
+    countrycode:
+      type: string
+      minLength: 3
+      maxLength: 3
+      description: The player's country code (3 characters)
+      example: ESP
+    countrypicture:
+      type: string
+      description: URL to the player's country flag picture
+      example: https://tenisu.latelier.co/resources/Espagne.png
+    picture:
+      type: string
+      description: URL to the player's picture
+      example: https://tenisu.latelier.co/resources/Nadal.png

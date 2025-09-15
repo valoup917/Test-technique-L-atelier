@@ -2,6 +2,8 @@
  * Express application setup
  */
 import express, { Request, Response, NextFunction } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swagger';
 import playersRoutes from './routes/players';
 
 const app = express();
@@ -16,6 +18,15 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use('/players', playersRoutes);
+
+// Swagger documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Expose the swagger spec as JSON
+app.get('/swagger.json', (req: Request, res: Response) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: '' });

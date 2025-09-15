@@ -1,0 +1,15 @@
+get:
+  summary: Get player statistics
+  description: Returns statistics about players including country with highest win ratio, average IMC, and median height
+  responses:
+    '200':
+      description: Player statistics
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statistics:
+                $ref: '#/components/schemas/Statistics'
+    '500':
+      $ref: '#/components/responses/ServerError'

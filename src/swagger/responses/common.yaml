@@ -1,0 +1,52 @@
+BadRequest:
+  description: Bad request, invalid input
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          error:
+            type: string
+            example: Bad Request
+          message:
+            type: string
+            example: Player ID must be a number
+
+NotFound:
+  description: Resource not found
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          error:
+            type: string
+            example: Not Found
+          message:
+            type: string
+            example: Player with ID 999 not found
+
+ServerError:
+  description: Internal server error
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          error:
+            type: string
+            example: Internal server error
+          message:
+            type: string
+            example: Failed to retrieve player data
+
+Conflict:
+  description: Conflict with existing resource
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          error:
+            type: string
+            example: Player already exists
